@@ -10,7 +10,7 @@ import { NotFound } from './Views/Notfound';
 
 const AuthRouter = () => {
   return(
-    <Route path="/dashboard/main" component={Dashboard} />
+    <Route path="/dashboard" component={Dashboard} />
   )
 }
 

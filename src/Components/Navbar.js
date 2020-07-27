@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom' 
 import icon from '../Images/logo.svg'
 import M from 'materialize-css'
+import { auth } from "../Firebase/auth";
 
 const Navbar = () => {
   useEffect(() => {
     var elems = document.querySelectorAll('.sidenav');
     M.Sidenav.init(elems);
+    console.log(auth.currentUser)
   })
   return (
     <>
@@ -14,20 +17,20 @@ const Navbar = () => {
           <a href="#!" class="brand-logo">
             <img className="App-logo" src={icon} alt="" />
           </a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-          <span style={{fontSize: 24, marginLeft: 90}} className="hide-on-med-and-down"  >ProStockAlert</span>
+           <span style={{fontSize: 24, marginLeft: 90}} className="hide-on-med-and-down"  >ProStockAlert</span>
+           {/* <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down">
-            <li><a href="#!">Chat Room 1</a></li>
-            <li><a href="#!">Chat Room 2</a></li>
-            <li><a href="#!">Chat Room 3</a></li>
-          </ul>
+            <li><Link to="#!">Chat Room 1</Link></li>
+            <li><Link to="#!">Chat Room 2</Link></li>
+            <li><Link to="#!">Chat Room 3</Link></li>
+          </ul> */}
         </div>
       </nav>
-      <ul class="sidenav" id="mobile-demo">
-        <li><a href="#!">Chat Room 1</a></li>
-        <li><a href="#!">Chat Room 2</a></li>
-        <li><a href="#!">Chat Room 3</a></li>
-      </ul>
+      {/* <ul class="sidenav" id="mobile-demo">
+        <li><Link to="#!">Chat Room 1</Link></li>
+        <li><Link to="#!">Chat Room 2</Link></li>
+        <li><Link to="#!">Chat Room 3</Link></li>
+      </ul> */}
      </>
   );
 };

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { ChatFeed, Message } from 'react-chat-ui'
-import { db } from "../../Firebase/firestore";
+import { Route } from 'react-router-dom'
+// import { ChatFeed, Message } from 'react-chat-ui'
+// import { db } from "../../Firebase/firestore";
 import { auth } from '../../Firebase/auth';
-import Navbar from '../../Components/Navbar';
+import TopBar from './TopBar';
+import Room1 from './ChatRooms/Room1';
+import Room2 from './ChatRooms/Room2';
+// import Room3 from './ChatRooms/Room3';
 
 
 
@@ -11,15 +15,15 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       user: null,
-      messages: [
-        // new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-        // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-        // new Message({ id: 3, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-        // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-        // new Message({ id: 5, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-        // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-      ],
-      //...
+    //   messages: [
+    //     // new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
+    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
+    //     // new Message({ id: 3, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
+    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
+    //     // new Message({ id: 5, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
+    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
+    //   ],
+    //   //...
     };
     //...
   }
@@ -28,79 +32,76 @@ class Dashboard extends Component {
       if(user) this.setState({user})
       else this.setState({user: null});
       console.log("state updated");  
+      //       // this.setState({user})
+  //       let messages = []
+  //       db.collection('chatRoom1').orderBy('time').get()
+  //       .then(res => {
+  //         res.forEach(messg => {
+  //           console.log(messg.data())
+  //           messages.push(new Message({
+  //             id: messg.data().uid === auth.currentUser.uid ? 0 : messg.data().uid,
+  //             message: messg.data().message,
+  //             senderName: messg.data().name,
+  //           }))
+  //         })
+  //         this.setState({user, messages})
+  //       })
+  //     }
     })
   }
-  componentWillMount(){
-    db.collection("chatRoom1").onSnapshot(snapshot => {
-      snapshot.docChanges().forEach(change => {
-        if (change.type === "added") {
-          // let newMsg = change.doc.data();
-          // newMsg.id = newMsg.uid === auth.currentUser.uid ? 0 : newMsg.uid;
-          let newMsg = [ new Message({
-            id: change.doc.data().uid === auth.currentUser.uid ? 0 : change.doc.data().uid,
-            message: change.doc.data().message,
-            senderName: change.doc.data().name,
-          }) ];
-            console.log(newMsg);
-          this.setState({ messages: newMsg.concat(this.state.messages) })
-          // console.log("New Message Added: ", change.doc.data());
-        }
-        else{
-          this.state.messages.reverse();
-        }
-      });
-    });
-  }
-  SendNewMessage = () => {
-    db.collection('chatRoom1').add(
-      {
-        message: document.getElementById('msgInput').value, 
-        uid: this.state.user ? this.state.user.uid: null,
-        name: this.state.user ? this.state.user.displayName: null,
-      })
-      .then(() => document.getElementById('msgInput').value = '')
-  }
+  // componentWillMount(){
+  //   db.collection("chatRoom1").onSnapshot(snapshot => {
+  //     snapshot.docChanges().forEach(change => {
+  //       if (change.type === "added") {
+  //         // let newMsg = change.doc.data();
+  //         // newMsg.id = newMsg.uid === auth.currentUser.uid ? 0 : newMsg.uid;
+  //         let newMsg = [ new Message({
+  //           id: change.doc.data().uid === auth.currentUser.uid ? 0 : change.doc.data().uid,
+  //           message: change.doc.data().message,
+  //           senderName: change.doc.data().name,
+  //         }) ];
+  //           // console.log(newMsg);
+  //         this.setState({ messages: this.state.messages.concat(newMsg) })
+  //         // console.log("New Message Added: ", change.doc.data());
+  //       }
+  //       // else{
+  //       //   this.state.messages.reverse();
+  //       // }
+  //     });
+  //   });
+  // }
+  // SendNewMessage = () => {
+  //   console.log(`${new Date().getHours()} : ${new Date().getMinutes()} = ${new Date().getTime()}`);
+  //   db.collection('chatRoom1').add(
+  //     {
+  //       message: document.getElementById('msgInput').value, 
+  //       uid: this.state.user ? this.state.user.uid: null,
+  //       name: this.state.user ? this.state.user.displayName: null,
+  //       time: new Date().getTime()
+  //     })
+  //     .then(() => document.getElementById('msgInput').value = '')
+  // }
    
   render() {
     return (
       <div>
-        <Navbar />
+        <TopBar />
         
         <div className="container">
-          <div className="card" style={{padding: 40, marginTop: 20}} >
-
-
-          <div style={{display: 'flex'}} >
-
-            <input 
-              type='text' 
-              id="msgInput"
-              placeholder="Message..."
-              style={{
-                flexGrow: 1,
-                marginRigth: 20,
-                outline: 'none',
-              }} 
-            />
-            <button 
-              className='btn'
-              onKeyUpCapture={event => {if(event.keyCode == 13) this.SendNewMessage()}}  
-              onClick={this.SendNewMessage}
-                style={{
-                  marginLeft: 20,
-                  background: 'black',
-                  borderRadius: '100%',
-                  width: 50,
-                  height: 50,
-                }}
-              >
-              {/* send */}
-              <i class="material-icons right">send</i>
-            </button>
-
-          </div>
+          <div className="card" style={{padding: 20, marginTop: 20}} >
+            {this.state.user ?
+              <>
+              <Route exact path="/dashboard/chatRoom1" component={Room1} />
+              <Route exact path="/dashboard/chatRoom2" component={Room2} />
+              {/* <Route exact path="/dashboard/chatRoom3" component={Room3} /> */}
+              </>
+              : 
+              null
+            }
+            {/* <div className='card-title'>Chat Room 1</div>
+            <div className='divider'></div>
           {
-            this.state.user ? 
+          this.state.user ? 
           <div className="col s12 m8 l6" style={{maxHeight: 400, overflow: 'scroll', overflowX: 'hidden'}}>
             <ChatFeed
               messages={this.state.messages} // Boolean: list of message objects
@@ -117,6 +118,9 @@ class Dashboard extends Component {
                   chatbubble: {
                     // borderRadius: 70,
                     padding: 10
+                  },
+                  chat: {
+                    height: 400,
                   }
                 }
               }
@@ -124,6 +128,34 @@ class Dashboard extends Component {
           </div>
         : null
         }
+          <div className='card-action' style={{display: 'flex'}} >
+            <input 
+              type='text' 
+              id="msgInput"
+              placeholder="Message..."
+              onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}}  
+              style={{
+                flexGrow: 1,
+                marginRigth: 20,
+                outline: 'none',
+              }} 
+            />
+            <button 
+              className='btn'
+              onClick={this.SendNewMessage}
+                style={{
+                  marginLeft: 20,
+                  background: 'black',
+                  borderRadius: '100%',
+                  width: 50,
+                  height: 50,
+                }}
+              >
+               send
+              <i class="material-icons right">message</i>
+            </button>
+            </div> */}
+
           </div>
         </div>
       </div>
