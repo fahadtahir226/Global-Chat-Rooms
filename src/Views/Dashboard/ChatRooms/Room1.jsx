@@ -89,6 +89,7 @@ class Room1 extends Component {
         <div className='divider'></div>
           <div className="col s12 m8 l6" style={{maxHeight: 400, overflow: 'scroll', overflowX: 'hidden'}}>
             <ChatFeed
+              avatar={'https://facebook.github.io/react/img/logo.svg'}
               messages={this.state.messages} // Boolean: list of message objects
               isTyping={false} // Boolean: is the recipient typing
               hasInputField={false} // Boolean: use our input, or use your own

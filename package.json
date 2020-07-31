@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "firebase": "^7.17.1",
     "firebase-tools": "^8.6.0",
-    "materialize-css": "^1.0.0-rc.2",
+    "materialize-css": "^1.0.0",
     "react": "^16.13.1",
     "react-chat-elements": "^10.9.3",
     "react-chat-ui": "^0.3.2",

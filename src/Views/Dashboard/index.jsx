@@ -4,8 +4,10 @@ import { Route } from 'react-router-dom'
 // import { db } from "../../Firebase/firestore";
 import { auth } from '../../Firebase/auth';
 import TopBar from './TopBar';
+import SideBar from './SideBar'
 import Room1 from './ChatRooms/Room1';
 import Room2 from './ChatRooms/Room2';
+import Room3 from './ChatRooms/Room3';
 // import Room3 from './ChatRooms/Room3';
 
 
@@ -84,26 +86,32 @@ class Dashboard extends Component {
    
   render() {
     return (
-      <div>
+      <div style={{background: "#fafafa"}} >
         <TopBar />
-        
-        <div className="container">
-          <div className="card" style={{padding: 20, marginTop: 20}} >
+        <div className="container-fluid">
+        <div className='row' >
+
+
+        <div className="col hide-on-med-and-down m4 l3" style={{padding: 0}}>
+          <SideBar />
+        </div >
+        <div className="col s12 m12 l9">
+          <div className="card" style={{padding: 20, marginTop: 20, background: 'white'}} >
             {this.state.user ?
               <>
               <Route exact path="/dashboard/chatRoom1" component={Room1} />
               <Route exact path="/dashboard/chatRoom2" component={Room2} />
-              {/* <Route exact path="/dashboard/chatRoom3" component={Room3} /> */}
+              <Route exact path="/dashboard/chatRoom3" component={Room3} />
               </>
               : 
               null
             }
             {/* <div className='card-title'>Chat Room 1</div>
             <div className='divider'></div>
-          {
-          this.state.user ? 
-          <div className="col s12 m8 l6" style={{maxHeight: 400, overflow: 'scroll', overflowX: 'hidden'}}>
-            <ChatFeed
+            {
+              this.state.user ? 
+              <div className="col s12 m8 l6" style={{maxHeight: 400, overflow: 'scroll', overflowX: 'hidden'}}>
+              <ChatFeed
               messages={this.state.messages} // Boolean: list of message objects
               isTyping={false} // Boolean: is the recipient typing
               hasInputField={false} // Boolean: use our input, or use your own
@@ -124,41 +132,42 @@ class Dashboard extends Component {
                   }
                 }
               }
-            />
-          </div>
-        : null
-        }
-          <div className='card-action' style={{display: 'flex'}} >
+              />
+              </div>
+              : null
+            }
+            <div className='card-action' style={{display: 'flex'}} >
             <input 
-              type='text' 
-              id="msgInput"
-              placeholder="Message..."
-              onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}}  
-              style={{
-                flexGrow: 1,
-                marginRigth: 20,
-                outline: 'none',
-              }} 
+            type='text' 
+            id="msgInput"
+            placeholder="Message..."
+            onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}}  
+            style={{
+              flexGrow: 1,
+              marginRigth: 20,
+              outline: 'none',
+            }} 
             />
             <button 
-              className='btn'
-              onClick={this.SendNewMessage}
-                style={{
-                  marginLeft: 20,
-                  background: 'black',
-                  borderRadius: '100%',
-                  width: 50,
-                  height: 50,
-                }}
-              >
-               send
-              <i class="material-icons right">message</i>
+            className='btn'
+            onClick={this.SendNewMessage}
+            style={{
+              marginLeft: 20,
+              background: 'black',
+              borderRadius: '100%',
+              width: 50,
+              height: 50,
+            }}
+            >
+            send
+            <i class="material-icons right">message</i>
             </button>
-            </div> */}
-
+          </div> */}
+        </div>
           </div>
         </div>
       </div>
+    </div>
     );
   }
 }
