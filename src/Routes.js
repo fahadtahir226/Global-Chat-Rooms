@@ -8,21 +8,15 @@ import { NotFound } from './Views/Notfound';
 
 // import icon from './Images/logo.svg'
 
-const AuthRouter = () => {
-  return(
-    <Route path="/dashboard" component={Dashboard} />
-  )
-}
-
 
 const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Redirect exact from="/" to="/sign-in" />
+        <Redirect exact from="/" to="/dashboard/main" />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
-        <Route path="/dashboard/" component={AuthRouter} />
+        <Route path="/dashboard/" component={Dashboard} />
         <Route to="/not-found" component={NotFound} />
       </Switch>
     </BrowserRouter>

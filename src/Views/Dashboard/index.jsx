@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom'
 // import { db } from "../../Firebase/firestore";
 import { auth } from '../../Firebase/auth';
 import TopBar from './TopBar';
-import SideBar from './SideBar'
+import SideBar from './SideBar/SideBar'
 import Room1 from './ChatRooms/Room1';
 import Room2 from './ChatRooms/Room2';
 import Room3 from './ChatRooms/Room3';
@@ -17,15 +17,9 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       user: null,
-    //   messages: [
-    //     // new Message({ id: 1, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-    //     // new Message({ id: 3, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-    //     // new Message({ id: 5, message: "I'm the recipient! (The person you're talking to)"}), // Gray bubble
-    //     // new Message({ id: 0, message: "I'm you -- the blue bubble!" }), // Blue bubble
-    //   ],
-    //   //...
+      chat1: {text: '', time: ''},
+      chat2: {text: '', time: ''},
+      chat3: {text: '', time: ''},
     };
     //...
   }
@@ -34,78 +28,47 @@ class Dashboard extends Component {
       if(user) this.setState({user})
       else this.setState({user: null});
       console.log("state updated");  
-      //       // this.setState({user})
-  //       let messages = []
-  //       db.collection('chatRoom1').orderBy('time').get()
-  //       .then(res => {
-  //         res.forEach(messg => {
-  //           console.log(messg.data())
-  //           messages.push(new Message({
-  //             id: messg.data().uid === auth.currentUser.uid ? 0 : messg.data().uid,
-  //             message: messg.data().message,
-  //             senderName: messg.data().name,
-  //           }))
-  //         })
-  //         this.setState({user, messages})
-  //       })
-  //     }
     })
   }
-  // componentWillMount(){
-  //   db.collection("chatRoom1").onSnapshot(snapshot => {
-  //     snapshot.docChanges().forEach(change => {
-  //       if (change.type === "added") {
-  //         // let newMsg = change.doc.data();
-  //         // newMsg.id = newMsg.uid === auth.currentUser.uid ? 0 : newMsg.uid;
-  //         let newMsg = [ new Message({
-  //           id: change.doc.data().uid === auth.currentUser.uid ? 0 : change.doc.data().uid,
-  //           message: change.doc.data().message,
-  //           senderName: change.doc.data().name,
-  //         }) ];
-  //           // console.log(newMsg);
-  //         this.setState({ messages: this.state.messages.concat(newMsg) })
-  //         // console.log("New Message Added: ", change.doc.data());
-  //       }
-  //       // else{
-  //       //   this.state.messages.reverse();
-  //       // }
-  //     });
-  //   });
-  // }
-  // SendNewMessage = () => {
-  //   console.log(`${new Date().getHours()} : ${new Date().getMinutes()} = ${new Date().getTime()}`);
-  //   db.collection('chatRoom1').add(
-  //     {
-  //       message: document.getElementById('msgInput').value, 
-  //       uid: this.state.user ? this.state.user.uid: null,
-  //       name: this.state.user ? this.state.user.displayName: null,
-  //       time: new Date().getTime()
-  //     })
-  //     .then(() => document.getElementById('msgInput').value = '')
-  // }
-   
+
   render() {
+    // let date = new Date();
+    // console.log(date.getTime(), new Date((date.getTime())).toLocaleDateString());
     return (
       <div style={{background: "#fafafa"}} >
         <TopBar />
         <div className="container-fluid">
-        <div className='row' >
+        <div className='row' style={{marginBottom: 0}} >
 
 
-        <div className="col hide-on-med-and-down m4 l3" style={{padding: 0}}>
-          <SideBar />
-        </div >
-        <div className="col s12 m12 l9">
-          <div className="card" style={{padding: 20, marginTop: 20, background: 'white'}} >
-            {this.state.user ?
+        {/* <div className="col hide-on-med-and-down m4 l3" style={{padding: 0}}>
+          <SideBar 
+            chat1={this.state.chat1} 
+            chat2={this.state.chat2} 
+            chat3={this.state.chat3} />
+        </div > */}
+        <div className="col s12 m12 l12">
+          <div className="card z-depth-0" style={{padding: 20, marginTop: 20, border: '2px solid #f5f5f5', background: 'white'}} >
+            {/* {this.state.user ? */}
               <>
-              <Route exact path="/dashboard/chatRoom1" component={Room1} />
-              <Route exact path="/dashboard/chatRoom2" component={Room2} />
-              <Route exact path="/dashboard/chatRoom3" component={Room3} />
+                <Route exact path="/dashboard/main">
+                  <div style={{textAlign: 'center', minHeight: '64vh'}}>
+
+                  <h3 style={{color: "#0d47a1" , fontFamily: 'Roboto', marginTop: 100}} >
+                    Welcome To ProStockAlert
+                  </h3>
+                  <a style={{border: '2px solid #bdbdbd', padding: 10, marginTop: 100, borderRadius: 100, color: '#bdbdbd'}} href="chatRoom1">
+                    Go To Chat Now <i className="fa fa-angle-double-right"></i>
+                  </a>
+                  </div>
+                </Route>
+                <Route exact path="/dashboard/chatRoom1" ><Room1 /></Route>
+                <Route exact path="/dashboard/chatRoom2" ><Room2 /></Route>
+                <Route exact path="/dashboard/chatRoom3" ><Room3 /></Route>
               </>
-              : 
-              null
-            }
+              {/* :  */}
+              {/* null */}
+            {/* } */}
             {/* <div className='card-title'>Chat Room 1</div>
             <div className='divider'></div>
             {

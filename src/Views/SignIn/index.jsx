@@ -59,7 +59,11 @@ class SignIn extends Component {
                 </div>
               </div>
               <div className='row' >Don't have an account? <Link to='sign-up' >Sign Up</Link> here</div>
-
+              <div className='row'>
+                <a style={{border: '2px solid #bdbdbd', padding: 10, marginTop: 100, borderRadius: 100, color: '#bdbdbd'}} href="dashboard/chatRoom1">
+                  Go To Public Chat Now <i className="fa fa-angle-double-right"></i>
+                </a>
+              </div>
            </form>
           </div>
         </div>

@@ -54,7 +54,7 @@ export const SignInCall = (e) => {
 export const SignOut = () => {
     auth.signOut()
     .then(res => {
-      window.location.replace("/");
+      window.location.replace("/sign-in");
     }).catch(err => {
         console.log(err);
     })
