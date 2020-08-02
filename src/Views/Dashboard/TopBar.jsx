@@ -22,7 +22,7 @@ const TopBar = () => {
             <img className="App-logo" src={icon} alt="" />
           </a>
           <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
-          <span style={{fontSize: 24, marginLeft: 90}} className="hide-on-med-and-down"  >Dashboard</span>
+          <span style={{fontSize: 24, marginLeft: 90}} className="hide-on-med-and-down">ProStockAlert</span>
           <ul className="right hide-on-med-and-down">
             <li><Link to="chatRoom1">Chat Room 1</Link></li>
             <li><Link to="chatRoom2">Chat Room 2</Link></li>
