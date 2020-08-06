@@ -1,5 +1,5 @@
 {
-  "name": "threedcms",
+  "name": "global-chat-room",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +13,7 @@
     "react-chat-elements": "^10.9.3",
     "react-chat-ui": "^0.3.2",
     "react-dom": "^16.13.1",
+    "react-image-file-resizer": "^0.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1"
   },

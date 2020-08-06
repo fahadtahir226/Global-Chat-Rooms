@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { MessageList, MessageBox } from 'react-chat-elements'
+import Resizer from 'react-image-file-resizer';
+import { MessageList } from 'react-chat-elements'
 import 'react-chat-elements/dist/main.css';
+
 
 import { db } from "../../../Firebase/firestore";
 import { auth } from '../../../Firebase/auth';
-
 
 
 class Dashboard extends Component {
@@ -17,12 +18,14 @@ class Dashboard extends Component {
     auth.onAuthStateChanged(user => {
         // this.setState({user})
         let messages = []
-        db.collection('chatRoom1').orderBy('date').get()
+        db.collection("chatRoom1").get().then(querySnapshot => {      
+          console.log(querySnapshot.size, querySnapshot.forEach(data => console.log(data.data()))); 
+        db.collection('chatRoom1').orderBy('date', 'desc').get()
         .then(res => {
           res.forEach(messg => {
             let authedAndself = auth.currentUser ? messg.data().uid === auth.currentUser.uid ? true : false: false;
             if(messg.data().type === "text"){
-              messages.push(
+              messages.unshift(
                 {
                   avatar: messg.data().avatar,
                   type: 'text',
@@ -37,7 +40,7 @@ class Dashboard extends Component {
             }
             else if(messg.data().type === "photo"){
               console.log("photo adding");
-              messages.push(
+              messages.unshift(
                 {
                   avatar: messg.data().avatar,
                   type: 'photo',
@@ -45,14 +48,12 @@ class Dashboard extends Component {
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
                   replyButton: authedAndself,
+                  class: 'messg',
+                  className: 'messg',
                   onOpen: () => window.open(messg.data().data.uri),
                   // onClick: () => window.open(messg.data().data.uri),
                   data: {
                     uri: messg.data().data.uri,
-                    status: {
-                      click: false,
-                      loading: 0,
-                    }
                   },
                   onReplyMessageClick: () => alert('reply clicked!')
                 }
@@ -61,7 +62,7 @@ class Dashboard extends Component {
           })
           this.setState({user, messages})
         })
-
+      });
     })
   }
   componentWillMount(){
@@ -72,7 +73,7 @@ class Dashboard extends Component {
           let newMsg = []
           let authed = auth.currentUser ? change.doc.data().uid === auth.currentUser.uid ? true : false: false;
           if(change.doc.data().type === 'text'){
-            newMsg.push({
+            newMsg.unshift({
               avatar: change.doc.data().avatar,
               type: 'text',
               position: authed ? 'right' : 'left',
@@ -84,13 +85,14 @@ class Dashboard extends Component {
             });
           }
           else if (change.doc.data().type === 'photo'){
-            newMsg.push({
+            newMsg.unshift({
               avatar: change.doc.data().avatar,
               type: 'photo',
               position: authed ? 'right' : 'left',
               title: authed ? 'Me' : change.doc.data().title,
+
               date: new Date(change.doc.data().date * 1000).toLocaleTimeString(),
-              replyButton: true,
+              replyButton: authed,
               data: {
                 uri: change.doc.data().data.uri,
                 status: { click: false }
@@ -105,8 +107,6 @@ class Dashboard extends Component {
     });
   }
   SendNewMessage = () => {
-
-
     if(!auth.currentUser) window.location.replace('/sign-in')
     this.setState({disabled: true})
     console.log("sending a message");
@@ -125,6 +125,42 @@ class Dashboard extends Component {
       //  this.setState({disabled: false})
       })
   }
+  SendNewImage = () => {
+    if(!auth.currentUser) window.location.replace('/sign-in')
+    let img = document.getElementById('imgInput').files[0];
+    if(!img) return;
+    if(img.type.split('/')[0] === "image"){
+      this.setState({disabled: true})
+
+            Resizer.imageFileResizer(
+                img,
+                300,
+                300,
+                'JPEG',
+                100,
+                0,
+                uri => {
+                    db.collection('chatRoom1').add({
+                      uid: this.state.user ? this.state.user.uid: null,
+                      title: this.state.user ? this.state.user.displayName: null,
+                      avatar: this.state.user ? this.state.user.photoURL: null,
+                      type: 'photo',
+                      date: new Date(),
+                      data: {
+                        uri
+                      }
+                    })
+                    .then(() => this.setState({disabled: false}))
+                },
+                'base64'
+            );
+    }
+    else{
+      alert('Upload type not image');
+    }
+
+
+  }
   render() {
     return (
       <div  >
@@ -135,25 +171,35 @@ class Dashboard extends Component {
             className='message-list'
             toBottomHeight={'100%'}
             dataSource={this.state.messages} 
-            downButton={true}
-            onDownload	={msg => window.open(msg.data.uri)}
-            onReplyClick	={obj => alert(`Reply Clicked on message ${obj.title}`)}
+            // downButton={true}
+            onDownload={msg => {
+              let wind = window.open('_blank');
+              wind.document.body.innerHTML = `<img src=${msg.data.uri} alt="" />`
+            }}
+            onReplyClick={obj => alert(`Replied to ${obj.title}`)}
           />
         </div>
 
         <div className='divider' ></div>
         <div style={{display: 'flex', paddingTop: 15}} > 
-        <input type='text' id="msgInput" placeholder="Message..." autoComplete="off" 
-        disabled={this.state.disabled}
-          onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}} style={{ flexGrow: 1, marginRigth: 20, outline: 'none',}}  />
+          <input type='text' id="msgInput" placeholder="Message..." autoComplete="off"  disabled={this.state.disabled}
+            onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}} style={{ flexGrow: 1, marginRigth: 20, outline: 'none',}}  />
+          <input type='file' accept="image/*" className="hide" id="imgInput" onChange={this.SendNewImage} />
+
+        <button 
+          className='btn'
+          disabled={this.state.disabled} 
+          onClick={() => document.getElementById('imgInput').click()}
+          style={{  marginLeft: 20,  background: 'black',  borderRadius: '100%',  width: 50,  height: 50,}} >
+          <i className="material-icons right">image</i>
+        </button>
+
         <button 
           className='btn'
           disabled={this.state.disabled} 
           onClick={this.SendNewMessage}
           style={{  marginLeft: 20,  background: 'black',  borderRadius: '100%',  width: 50,  height: 50,}} >
-
-
-        <i class="material-icons right">message</i>
+        <i className="material-icons right">message</i>
         </button>
         </div>
       </div>

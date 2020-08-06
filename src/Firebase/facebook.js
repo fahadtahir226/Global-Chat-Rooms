@@ -14,7 +14,7 @@ export const facebookLogin = (event) => {
     // ...
     // console.log(token, secret, user);
     auth.currentUser.updateProfile({displayName: result.user.name});
-    window.location.replace('/dashboard/main');
+    window.location.replace('/dashboard/chatRoom1');
     // window.location.replace('../home.html');
   })
   .catch(function (error) {

@@ -4,7 +4,7 @@ import 'react-chat-elements/dist/main.css';
 
 import { db } from "../../../Firebase/firestore";
 import { auth } from '../../../Firebase/auth';
-
+import firebase from '../../../Firebase/firebase'
 
 
 class Dashboard extends Component {
@@ -45,12 +45,14 @@ class Dashboard extends Component {
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
                   replyButton: authedAndself,
+                  class: 'messg',
+                  className: 'messg',
                   onOpen: () => window.open(messg.data().data.uri),
                   // onClick: () => window.open(messg.data().data.uri),
                   data: {
                     uri: messg.data().data.uri,
                     status: {
-                      click: false,
+                      click: true,
                       loading: 0,
                     }
                   },
@@ -89,8 +91,11 @@ class Dashboard extends Component {
               type: 'photo',
               position: authed ? 'right' : 'left',
               title: authed ? 'Me' : change.doc.data().title,
+              class: 'messg',
+              className: 'messg',
+
               date: new Date(change.doc.data().date * 1000).toLocaleTimeString(),
-              replyButton: true,
+              replyButton: authed,
               data: {
                 uri: change.doc.data().data.uri,
                 status: { click: false }
@@ -105,8 +110,6 @@ class Dashboard extends Component {
     });
   }
   SendNewMessage = () => {
-
-
     if(!auth.currentUser) window.location.replace('/sign-in')
     this.setState({disabled: true})
     console.log("sending a message");
@@ -125,6 +128,41 @@ class Dashboard extends Component {
       //  this.setState({disabled: false})
       })
   }
+  SendNewImage = () => {
+    if(!auth.currentUser) window.location.replace('/sign-in')
+    let img = document.getElementById('imgInput').files[0];
+    if(!img) return;
+    if(img.type.split('/')[0] === "image"){
+      this.setState({disabled: true})
+
+      console.log(new Date().toString());
+
+      let ref = firebase.storage().ref().child(`posts/${new Date().toString()}`)
+      ref.put(img)
+      .then(() => ref.getDownloadURL())
+      .then(uri =>     
+        db.collection('chatRoom3').add({
+          uid: this.state.user ? this.state.user.uid: null,
+          title: this.state.user ? this.state.user.displayName: null,
+          avatar: this.state.user ? this.state.user.photoURL: null,
+          type: 'photo',
+          date: new Date(),
+          data: {
+            uri, status: { click: false }
+          }
+        })
+      )
+      .catch(err => {
+        alert(err);
+        this.setState({disabled: false})
+      })
+    }
+    else{
+      console.log('not valid');
+    }
+
+
+  }
   render() {
     return (
       <div  >
@@ -135,25 +173,32 @@ class Dashboard extends Component {
             className='message-list'
             toBottomHeight={'100%'}
             dataSource={this.state.messages} 
-            downButton={true}
-            onDownload	={msg => window.open(msg.data.uri)}
-            onReplyClick	={obj => alert(`Reply Clicked on message ${obj.title}`)}
+            // downButton={true}
+            onDownload={msg => window.open(msg.data.uri)}
+            onReplyClick={obj => alert(`Replied to ${obj.title}`)}
           />
         </div>
 
         <div className='divider' ></div>
         <div style={{display: 'flex', paddingTop: 15}} > 
-        <input type='text' id="msgInput" placeholder="Message..." autoComplete="off" 
-        disabled={this.state.disabled}
-          onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}} style={{ flexGrow: 1, marginRigth: 20, outline: 'none',}}  />
+          <input type='text' id="msgInput" placeholder="Message..." autoComplete="off"  disabled={this.state.disabled}
+            onKeyDown={event => {if(event.keyCode == 13) this.SendNewMessage()}} style={{ flexGrow: 1, marginRigth: 20, outline: 'none',}}  />
+          <input type='file' accept="image/*" className="hide" id="imgInput" onChange={this.SendNewImage} />
+
+        <button 
+          className='btn'
+          disabled={this.state.disabled} 
+          onClick={() => document.getElementById('imgInput').click()}
+          style={{  marginLeft: 20,  background: 'black',  borderRadius: '100%',  width: 50,  height: 50,}} >
+          <i className="material-icons right">image</i>
+        </button>
+
         <button 
           className='btn'
           disabled={this.state.disabled} 
           onClick={this.SendNewMessage}
           style={{  marginLeft: 20,  background: 'black',  borderRadius: '100%',  width: 50,  height: 50,}} >
-
-
-        <i class="material-icons right">message</i>
+        <i className="material-icons right">message</i>
         </button>
         </div>
       </div>

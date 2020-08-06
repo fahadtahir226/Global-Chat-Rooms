@@ -18,7 +18,7 @@ export const SignUpCall = (e, addError) => {
       // db.collection('users').doc(res.user.uid).set({name,email,uid, type: "Unassigned"})
       // .then(() => {
       //   console.log('User Added')
-        window.location.replace('/dashboard/main');
+        window.location.replace('/dashboard/chatRoom1');
       // })
     })
     .catch((err) => {
@@ -40,7 +40,7 @@ export const SignInCall = (e) => {
     auth.signInWithEmailAndPassword(email, pass)
     .then( res => {
       if (res) {
-        window.location.replace("/dashboard/main");
+        window.location.replace("/dashboard/chatRoom1");
         console.log(auth.currentUser);
       }
     }) 

@@ -19,6 +19,15 @@
   color: black !important;
 }
 
+/* .messg{ */
+  /* width: 500px; */
+  /* max-width: 500px; */
+  /* margin-right: 0px; */
+  /* text-align: right ; */
+  /* float: right; */
+  /* max-height: 500px; */
+/* } */
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

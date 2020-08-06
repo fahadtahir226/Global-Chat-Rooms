@@ -13,7 +13,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Redirect exact from="/" to="/dashboard/main" />
+        <Redirect exact from="/" to="/dashboard/chatRoom1" />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
         <Route path="/dashboard/" component={Dashboard} />

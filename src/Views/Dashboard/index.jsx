@@ -51,17 +51,6 @@ class Dashboard extends Component {
           <div className="card z-depth-0" style={{padding: 20, marginTop: 20, border: '2px solid #f5f5f5', background: 'white'}} >
             {/* {this.state.user ? */}
               <>
-                <Route exact path="/dashboard/main">
-                  <div style={{textAlign: 'center', minHeight: '64vh'}}>
-
-                  <h3 style={{color: "#0d47a1" , fontFamily: 'Roboto', marginTop: 100}} >
-                    Welcome To ProStockAlert
-                  </h3>
-                  <a style={{border: '2px solid #bdbdbd', padding: 10, marginTop: 100, borderRadius: 100, color: '#bdbdbd'}} href="chatRoom1">
-                    Go To Chat Now <i className="fa fa-angle-double-right"></i>
-                  </a>
-                  </div>
-                </Route>
                 <Route exact path="/dashboard/chatRoom1" ><Room1 /></Route>
                 <Route exact path="/dashboard/chatRoom2" ><Room2 /></Route>
                 <Route exact path="/dashboard/chatRoom3" ><Room3 /></Route>

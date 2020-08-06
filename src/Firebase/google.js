@@ -9,7 +9,7 @@ export const googleLogin = (event) => {
     .then(function (result) {
       auth.currentUser.updateProfile({displayName: result.user.name});
       console.log(result.user.uid)
-      window.location.replace('/dashboard/main');
+      window.location.replace('/dashboard/chatRoom1');
     })
     .catch(function (error) {
         // Handle Errors here.
