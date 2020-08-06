@@ -97,7 +97,10 @@ class Dashboard extends Component {
     });
   }
   SendNewMessage = () => {
-    if(!auth.currentUser) window.location.replace('/sign-in')
+    if(!auth.currentUser) {
+      window.location.replace('/sign-in')
+      return;
+    }
     this.setState({disabled: true})
     console.log("sending a message");
     if(document.getElementById('msgInput').value <= 0) return;
@@ -116,8 +119,10 @@ class Dashboard extends Component {
       })
   }
   SendNewImage = () => {
-    if(!auth.currentUser) window.location.replace('/sign-in')
-    let img = document.getElementById('imgInput').files[0];
+    if(!auth.currentUser) {
+      window.location.replace('/sign-in')
+      return;
+    }    let img = document.getElementById('imgInput').files[0];
     console.log(img)
     if(!img) {console.log("Nothing to upload"); return;}
     if(img.type.split('/')[0] === "image"){
@@ -155,7 +160,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div  >
-        <div className='card-title'>Chat Room 1</div>
+        <div className='card-title'>Stocks</div>
         <div className='divider'></div>
         <div style={{ minHeight: '64vh', maxHeight: '64vh', overflow: 'scroll', overflowX: 'hidden'}} >
           <MessageList
