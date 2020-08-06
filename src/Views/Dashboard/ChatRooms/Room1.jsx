@@ -31,13 +31,12 @@ class Dashboard extends Component {
                   text: messg.data().text,
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
-                  replyButton: authedAndself,
+                  replyButton: auth.currentUser ? true : false,
                   onReplyMessageClick: () => alert('reply clicked!')
                 }
               )
             }
             else if(messg.data().type === "photo"){
-              console.log("photo adding");
               messages.push(
                 {
                   avatar: messg.data().avatar,
@@ -45,11 +44,9 @@ class Dashboard extends Component {
                   position: authedAndself ? 'right' : 'left',
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
-                  replyButton: authedAndself,
+                  replyButton: auth.currentUser ? true : false,
                   class: 'messg',
                   className: 'messg',
-                  // onOpen: () => window.open(messg.data().data.uri),
-                  // onClick: () => window.open(messg.data().data.uri),
                   data: {
                     uri: messg.data().data.uri,
                   },
@@ -77,7 +74,7 @@ class Dashboard extends Component {
               text: change.doc.data().text,
               title: authed ? 'Me' : change.doc.data().title,
               date: new Date(change.doc.data().date.seconds * 1000),
-              replyButton: authed,
+              replyButton: auth.currentUser ? true : false,
               
             });
           }
@@ -88,14 +85,12 @@ class Dashboard extends Component {
               position: authed ? 'right' : 'left',
               title: authed ? 'Me' : change.doc.data().title,
               date: new Date(change.doc.data().date * 1000).toLocaleTimeString(),
-              replyButton: authed,
+              replyButton: auth.currentUser ? true : false,
               data: {
                 uri: change.doc.data().data.uri,
               },
             });
           }
-            // console.log("New Message Added: ", this.state.messages);
-          // this.props.setChat({text: newMsg[0].text, time: newMsg[0].time})
           this.setState({ messages: this.state.messages.concat(newMsg) })
         }
       });
@@ -117,16 +112,16 @@ class Dashboard extends Component {
         
       })
       .then(() => {document.getElementById('msgInput').value = '';
-      //  this.setState({disabled: false})
+       this.setState({disabled: false})
       })
   }
   SendNewImage = () => {
     if(!auth.currentUser) window.location.replace('/sign-in')
     let img = document.getElementById('imgInput').files[0];
-    if(!img) return;
+    console.log(img)
+    if(!img) {console.log("Nothing to upload"); return;}
     if(img.type.split('/')[0] === "image"){
       this.setState({disabled: true})
-
             Resizer.imageFileResizer(
                 img,
                 300,
@@ -146,6 +141,7 @@ class Dashboard extends Component {
                       }
                     })
                     .then(() => this.setState({disabled: false}))
+                    .catch(err=>{this.setState({disabled: false}); console.log(err)})
                 },
                 'base64'
             );
@@ -167,10 +163,10 @@ class Dashboard extends Component {
             toBottomHeight={'100%'}
             dataSource={this.state.messages} 
             // downButton={true}
-            onDownload={msg => {
-              let wind = window.open('_blank');
-              wind.document.body.innerHTML = `<img src=${msg.data.uri} alt="" />`
-            }}
+            // onDownload={msg => {
+            //   let wind = window.open('_blank');
+            //   wind.document.body.innerHTML = `<img src=${msg.data.uri} alt="" />`
+            // }}
             onReplyClick={obj => alert(`Replied to ${obj.title}`)}
           />
         </div>

@@ -30,7 +30,7 @@ class Dashboard extends Component {
                   text: messg.data().text,
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
-                  replyButton: authedAndself,
+                  replyButton: auth.currentUser ? true : false,
                   onReplyMessageClick: () => alert('reply clicked!')
                 }
               )
@@ -44,7 +44,7 @@ class Dashboard extends Component {
                   position: authedAndself ? 'right' : 'left',
                   title: authedAndself ? 'Me' : messg.data().title,
                   date: new Date(messg.data().date.seconds * 1000),
-                  replyButton: authedAndself,
+                  replyButton: auth.currentUser ? true : false,
                   class: 'messg',
                   className: 'messg',
                   onOpen: () => window.open(messg.data().data.uri),
@@ -81,7 +81,7 @@ class Dashboard extends Component {
               text: change.doc.data().text,
               title: authed ? 'Me' : change.doc.data().title,
               date: new Date(change.doc.data().date.seconds * 1000),
-              replyButton: authed,
+              replyButton: auth.currentUser ? true : false,
               
             });
           }
@@ -95,7 +95,7 @@ class Dashboard extends Component {
               className: 'messg',
 
               date: new Date(change.doc.data().date * 1000).toLocaleTimeString(),
-              replyButton: authed,
+              replyButton: auth.currentUser ? true : false,
               data: {
                 uri: change.doc.data().data.uri,
                 status: { click: false }
