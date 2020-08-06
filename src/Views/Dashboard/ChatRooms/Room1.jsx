@@ -18,14 +18,12 @@ class Dashboard extends Component {
     auth.onAuthStateChanged(user => {
         // this.setState({user})
         let messages = []
-        db.collection("chatRoom1").get().then(querySnapshot => {      
-          console.log(querySnapshot.size, querySnapshot.forEach(data => console.log(data.data()))); 
-        db.collection('chatRoom1').orderBy('date', 'desc').get()
+        db.collection('chatRoom1').orderBy('date').get()
         .then(res => {
           res.forEach(messg => {
             let authedAndself = auth.currentUser ? messg.data().uid === auth.currentUser.uid ? true : false: false;
             if(messg.data().type === "text"){
-              messages.unshift(
+              messages.push(
                 {
                   avatar: messg.data().avatar,
                   type: 'text',
@@ -40,7 +38,7 @@ class Dashboard extends Component {
             }
             else if(messg.data().type === "photo"){
               console.log("photo adding");
-              messages.unshift(
+              messages.push(
                 {
                   avatar: messg.data().avatar,
                   type: 'photo',
@@ -50,7 +48,7 @@ class Dashboard extends Component {
                   replyButton: authedAndself,
                   class: 'messg',
                   className: 'messg',
-                  onOpen: () => window.open(messg.data().data.uri),
+                  // onOpen: () => window.open(messg.data().data.uri),
                   // onClick: () => window.open(messg.data().data.uri),
                   data: {
                     uri: messg.data().data.uri,
@@ -63,7 +61,6 @@ class Dashboard extends Component {
           this.setState({user, messages})
         })
       });
-    })
   }
   componentWillMount(){
     this.database = db.collection("chatRoom1").onSnapshot(snapshot => {
@@ -73,7 +70,7 @@ class Dashboard extends Component {
           let newMsg = []
           let authed = auth.currentUser ? change.doc.data().uid === auth.currentUser.uid ? true : false: false;
           if(change.doc.data().type === 'text'){
-            newMsg.unshift({
+            newMsg.push({
               avatar: change.doc.data().avatar,
               type: 'text',
               position: authed ? 'right' : 'left',
@@ -85,17 +82,15 @@ class Dashboard extends Component {
             });
           }
           else if (change.doc.data().type === 'photo'){
-            newMsg.unshift({
+            newMsg.push({
               avatar: change.doc.data().avatar,
               type: 'photo',
               position: authed ? 'right' : 'left',
               title: authed ? 'Me' : change.doc.data().title,
-
               date: new Date(change.doc.data().date * 1000).toLocaleTimeString(),
               replyButton: authed,
               data: {
                 uri: change.doc.data().data.uri,
-                status: { click: false }
               },
             });
           }
